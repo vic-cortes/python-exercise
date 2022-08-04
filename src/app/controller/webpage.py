@@ -1,5 +1,6 @@
-
+from app.models.webpage import Webpage
 
 
 def get_webpage(webpage: str) -> None:
-    pass
+    
+    return Webpage.get_metadata(webpage_url=webpage)

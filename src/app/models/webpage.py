@@ -1,4 +1,5 @@
 from dataclasses import dataclass
+from typing import Tuple
 
 import requests
 from lxml import etree
@@ -20,18 +21,21 @@ class Webpage:
         if not response.ok:
             return False
 
-        self._soup = BeautifulSoup(response.content)
+        self._soup = BeautifulSoup(response.content, "lxml")
         self._dom  = etree.HTML(response.content)
 
         return True
 
     @property
     def title(self):
-        return self._soup.title
+        return str(self._soup.title)
 
     @property
     def description(self):
-        return self._soup.find("meta", {"name": "description"})
+        if not (_desc := self._soup.find("meta", {"name": "description"})):
+            return "Not available"
+
+        return str(_desc)
     
     @property
     def favicon(self):
@@ -51,10 +55,10 @@ class Webpage:
         }
 
     @classmethod
-    def get_metadata(cls, webpage_url: str) -> dict:
+    def get_metadata(cls, webpage_url: str) -> Tuple[bool, dict]:
         webpage = cls(webpage_url=webpage_url)
 
         if not webpage.content_available:
-            return
+            return False, {}
 
-        return webpage.metadata()
+        return True, webpage.metadata()
