@@ -18,7 +18,7 @@ class Webpage:
     def content_available(self) -> bool:
         response = requests.get(self.webpage_url)
 
-        if not response.ok:
+        if not response.ok: # 200, 201
             return False
 
         self._soup = BeautifulSoup(response.content, "lxml")
