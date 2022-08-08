@@ -12,17 +12,17 @@ class Webpage:
 
     def __post_init__(self) -> None:
         self._soup = None
-        self._dom  = None
+        self._dom = None
 
     @property
     def content_available(self) -> bool:
         response = requests.get(self.webpage_url)
 
-        if not response.ok: # 200, 201
+        if not response.ok:  # 200, 201
             return False
 
         self._soup = BeautifulSoup(response.content, "lxml")
-        self._dom  = etree.HTML(response.content)
+        self._dom = etree.HTML(response.content)
 
         return True
 
@@ -36,12 +36,12 @@ class Webpage:
             return "Not available"
 
         return str(_desc)
-    
+
     @property
     def favicon(self):
         FAVICON_XPATH = "//link[contains(@href, 'favicon')]"
 
-        if not (fav_element := self._dom.xpath(FAVICON_XPATH)): 
+        if not (fav_element := self._dom.xpath(FAVICON_XPATH)):
             return "Not Available"
 
         # Converts node to html string

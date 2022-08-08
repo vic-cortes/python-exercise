@@ -8,6 +8,7 @@ from app.controller import webpage as webpage_controller
 def health():
     return jsonify({"message": "Everything's working fine!"})
 
+
 @blueprint.route("/retrieve/metadata", methods=["POST"])
 def metadata():
     json_data = request.get_json(force=True)
@@ -19,10 +20,6 @@ def metadata():
         message = f"Data not available for url {url}"
         return jsonify({"message": message}), 400
 
-    message_response = {
-        "url": url,
-        "status": "SUCCESS",
-        "data": data
-    }
+    message_response = {"url": url, "status": "SUCCESS", "data": data}
 
     return jsonify(message_response)
