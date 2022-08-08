@@ -1,0 +1,13 @@
+version: "3"
+
+services:
+  exercise:
+    image: python-exercise
+    container_name: python-excercise-${ENVIRONMENT}
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - 5000:5000
+    volumes:
+      - .:/python-exercise
