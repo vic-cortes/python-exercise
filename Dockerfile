@@ -1,26 +1,34 @@
-FROM python:3.9
+FROM python:3.9.13-slim-bullseye as base
 
 # Local timezone
-ENV APP_NAME="python-exercise"
-ENV TZ="America/Monterrey"
+ENV APP_NAME="python-exercise" \
+    TZ="America/Monterrey" \
+    PYTHONDONTWRITEBYTECODE=1 \
+    BASEPATH=/opt/${APP_NAME}
 
-# Keeps Python from generating .pyc files in the container
-ENV PYTHONDONTWRITEBYTECODE 1
-# Turns off buffering for easier container logging
-ENV PYTHONUNBUFFERED 1
-
+WORKDIR ${BASEPATH}
+COPY poetry.lock .
+COPY pyproject.toml .
 RUN pip install poetry
+# Do not make virtual environments, already in a container
+RUN poetry config virtualenvs.create false
 
-COPY . ${APP_NAME}
-RUN chmod 755 ${APP_NAME}
+FROM base AS production
 
-WORKDIR /${APP_NAME}
+ENV ENVIRONMENT="prod"
+RUN poetry install --no-dev
+WORKDIR ${BASEPATH}/src
+
+CMD ["python", "-u", "main.py"]
+
+
+FROM base AS dev
 
 # Do not make virtual environments, alrady in a container
-RUN poetry config virtualenvs.create false
-RUN poetry install --no-dev
-
-WORKDIR /${APP_NAME}/src
-RUN chmod 777 main.py
+ENV ENVIRONMENT="dev" \
+    PYTHONUNBUFFERED=1 
+# Turns off buffering for easier container logging
+RUN poetry install
+WORKDIR ${BASEPATH}/src
 
 CMD ["python", "-u", "main.py"]

@@ -9,6 +9,6 @@ from app.api import blueprint
 
 app.register_blueprint(blueprint)
 
-# Dummy comment
 if __name__ == "__main__":
-    app.run(debug=True, host="0.0.0.0")
+    debug = True if Config.ENVIRONMENT == "dev" else False
+    app.run(debug=debug, host="0.0.0.0")
