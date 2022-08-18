@@ -3,8 +3,9 @@ FROM python:3.9.13-slim-bullseye as base
 # Local timezone
 ENV APP_NAME="python-exercise" \
     TZ="America/Monterrey" \
-    PYTHONDONTWRITEBYTECODE=1 \
-    BASEPATH=/opt/${APP_NAME}
+    PYTHONDONTWRITEBYTECODE=1
+
+ENV BASEPATH="/opt/${APP_NAME}"
 
 WORKDIR ${BASEPATH}
 COPY poetry.lock .
@@ -17,6 +18,8 @@ FROM base AS production
 
 ENV ENVIRONMENT="prod"
 RUN poetry install --no-dev
+
+COPY . ${BASEPATH}
 WORKDIR ${BASEPATH}/src
 
 CMD ["python", "-u", "main.py"]
@@ -29,6 +32,8 @@ ENV ENVIRONMENT="dev" \
     PYTHONUNBUFFERED=1 
 # Turns off buffering for easier container logging
 RUN poetry install
+
+COPY . ${BASEPATH}
 WORKDIR ${BASEPATH}/src
 
 CMD ["python", "-u", "main.py"]
