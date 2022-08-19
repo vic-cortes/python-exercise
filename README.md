@@ -5,16 +5,21 @@ Repo to revierwe python experience. Retrieves information from a given `url`.
 
 ## How to run it?
 
-Run the following command to build and deploy the service
+### Development
 
-```sh
-docker-compose up
-```
+1. Build `dev` image with `docker build . -t python-exercise-dev --target=dev`
+2. Set `ENVIRONMENT="dev"` in `.env` file.
+3. Run `docker-compose up`
+
+### Production
+
+1. Build `prd` image with `docker build . -t python-exercise-prd --target=production`
+2. Set `ENVIRONMENT="prd"` in `.env` file.
+3. Run `docker-compose up`
 
 ## Endpoints Availables
 
 - `<base_url>/api/retrieve/metadata`
-
 
 ### Example
 
